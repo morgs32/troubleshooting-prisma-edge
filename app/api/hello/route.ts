@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
-import { Pool } from '@neondatabase/serverless'
+import { PrismaPlanetScale } from '@prisma/adapter-planetscale'
+import { Client } from '@planetscale/database'
 
 export const runtime = 'edge';
-
-export async function GET(request) {
-  const neon = new Pool({ connectionString: process.env.DATABASE_URL })
-  const adapter = new PrismaNeon(neon)
+ 
+export async function GET() {
+  const client = new Client({ url: process.env.DATABASE_URL })
+  const adapter = new PrismaPlanetScale(client)
   const prisma = new PrismaClient({ adapter })
 
   const users = await prisma.user.findMany()
